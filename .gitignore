@@ -1,0 +1,8 @@
+*.vspe
+*.workspace
+*.pdsprj
+*.pdsbak
+*.cproj
+*.xml
+*.atsln
+*.atsuo
