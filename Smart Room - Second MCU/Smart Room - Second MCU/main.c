@@ -53,19 +53,19 @@ int main(void)
 	TCCR1A |= (1<<COM1A1)|(1<<COM1B1)|(1<<WGM11);
 	TCCR1B |= (1<<WGM13)|(1<<WGM12)|(1<<CS11);
 	ICR1 = 32786;
-	OCR1A = 0x00;
-	OCR1B = 0x00;
+	OCR1A = 0;
+	OCR1B = 0;
 	//TIMSK1 = 0x01;
 	
 	//Timer 0
 	TCCR0A |= (1<<COM0B1)|(1<<WGM00)|(1<<WGM01);
-	TCCR0B |= (1<<CS02)|(1<<CS00);
-	OCR0B = 0x00;
+	TCCR0B |= (1<<CS00)|(1<<CS01);
+	OCR0B = 0;
 	
 	//Timer 2
 	TCCR2A |= (1<<COM2A1)|(1<<WGM20)|(1<<WGM21);
-	TCCR2B |= (1<<CS22)|(1<<CS20)|(1<<CS21);
-	OCR2A = 0x00;
+	TCCR2B |= (1<<CS22);
+	OCR2A = 0;
 	
 	//Ext. Interrupts
 	EICRA = (1<<ISC11)|(1<<ISC01)|(1<<ISC10)|(1<<ISC00);
@@ -161,8 +161,8 @@ ISR(INT0_vect)
 	if(receive_buffer_i2c[4] == 0x01) windowMotor.pulseCount++;
 	else if(receive_buffer_i2c[4] == 0x02) windowMotor.pulseCount--;
 	else if(receive_buffer_i2c[4] == 0x03 || receive_buffer_i2c[4] == 0x00) release_i2c();
-	if(windowMotor.pulseCount > 400 && receive_buffer_i2c[4] == 0x01) request_i2c();
-	if(windowMotor.pulseCount < 20 && receive_buffer_i2c[4] == 0x02) request_i2c();
+	if(windowMotor.pulseCount > 5 && receive_buffer_i2c[4] == 0x01) request_i2c();
+	if(windowMotor.pulseCount < 5 && receive_buffer_i2c[4] == 0x02) request_i2c();
 }
 
 ISR(INT1_vect)
@@ -170,8 +170,8 @@ ISR(INT1_vect)
 	if(receive_buffer_i2c[5] == 0x01) bed1Motor.pulseCount++;
 	else if(receive_buffer_i2c[5] == 0x02) bed1Motor.pulseCount--;
 	else if(receive_buffer_i2c[5] == 0x03 || receive_buffer_i2c[5] == 0x00) release_i2c();
-	if(bed1Motor.pulseCount > 400 && receive_buffer_i2c[5] == 0x01) request_i2c();
-	if(bed1Motor.pulseCount < 20 && receive_buffer_i2c[5] == 0x02) request_i2c();
+	if(bed1Motor.pulseCount > 5 && receive_buffer_i2c[5] == 0x01) request_i2c();
+	if(bed1Motor.pulseCount < 5 && receive_buffer_i2c[5] == 0x02) request_i2c();
 }
 
 ISR(PCINT0_vect)
@@ -179,8 +179,8 @@ ISR(PCINT0_vect)
 	if(receive_buffer_i2c[7] == 0x01) doorMotor.pulseCount++;
 	else if(receive_buffer_i2c[7] == 0x02) doorMotor.pulseCount--;
 	else if(receive_buffer_i2c[7] == 0x03 || receive_buffer_i2c[7] == 0x00) release_i2c();
-	if(doorMotor.pulseCount > 460 && receive_buffer_i2c[7] == 0x01) request_i2c();
-	if(doorMotor.pulseCount < 40 && receive_buffer_i2c[7] == 0x02) request_i2c();
+	if(doorMotor.pulseCount > 10 && receive_buffer_i2c[7] == 0x01) request_i2c();
+	if(doorMotor.pulseCount < 10 && receive_buffer_i2c[7] == 0x02) request_i2c();
 }
 
 ISR(PCINT2_vect)
@@ -188,7 +188,7 @@ ISR(PCINT2_vect)
 	if(receive_buffer_i2c[6] == 0x01) bed2Motor.pulseCount++;
 	else if(receive_buffer_i2c[6] == 0x02) bed2Motor.pulseCount--;
 	else if(receive_buffer_i2c[6] == 0x03 || receive_buffer_i2c[6] == 0x00) release_i2c();
-	if(bed2Motor.pulseCount > 200 && receive_buffer_i2c[6] == 0x01) request_i2c();
+	if(bed2Motor.pulseCount > 10 && receive_buffer_i2c[6] == 0x01) request_i2c();
 	if(bed2Motor.pulseCount < 10 && receive_buffer_i2c[6] == 0x02) request_i2c();
 }
 
