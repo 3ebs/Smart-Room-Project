@@ -74,8 +74,9 @@ void motorsFeedBack(void);
 
 int main(void)
 {
-	//I2C => 400KHz - Master
-	TWBR = 0x0C; //bit rate selector
+	//I2C => 100KHz - Master
+	TWBR = 0x12; //bit rate selector
+	TWSR |= (1<<TWPS0);
 	TWCR = 0x00;
 	//TWCR = (1<<TWINT) | (1<<TWEN) | (1<<TWSTA) | (1<<TWIE);
 	
@@ -112,7 +113,7 @@ int main(void)
 	DDRD &= ~0x40;
 	
 	//sleep mode
-	 set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 	 
 	sei(); //global interrupt enabled
 	
