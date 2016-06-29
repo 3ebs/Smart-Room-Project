@@ -46,7 +46,7 @@ union data_from_i2c
 enum{lower, upper};
 
 //DATA_1
-unsigned char receive_buffer_uart[5];
+unsigned char receive_buffer_uart[5] = {0x00, 0x00, 0x00, 0x00, 0x00};
 unsigned char receive_buffer_i2c[8];
 
 bool flag1 = 1;

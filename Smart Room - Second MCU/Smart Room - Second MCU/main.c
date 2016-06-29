@@ -17,7 +17,7 @@
 //DATA_1
 const char address = 0x03;
 unsigned char transmit_buffer_i2c[8];
-unsigned char receive_buffer_i2c[8];
+unsigned char receive_buffer_i2c[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 unsigned char i1;
 unsigned char i2;
 bool flagOfSleep = 1;
@@ -53,15 +53,19 @@ int main(void)
 	TCCR1A |= (1<<COM1A1)|(1<<COM1B1)|(1<<WGM11);
 	TCCR1B |= (1<<WGM13)|(1<<WGM12)|(1<<CS11);
 	ICR1 = 32786;
+	OCR1A = 0x00;
+	OCR1B = 0x00;
 	//TIMSK1 = 0x01;
 	
 	//Timer 0
 	TCCR0A |= (1<<COM0B1)|(1<<WGM00)|(1<<WGM01);
 	TCCR0B |= (1<<CS02)|(1<<CS00);
+	OCR0B = 0x00;
 	
 	//Timer 2
 	TCCR2A |= (1<<COM2A1)|(1<<WGM20)|(1<<WGM21);
 	TCCR2B |= (1<<CS22)|(1<<CS20)|(1<<CS21);
+	OCR2A = 0x00;
 	
 	//Ext. Interrupts
 	EICRA = (1<<ISC11)|(1<<ISC01)|(1<<ISC10)|(1<<ISC00);
