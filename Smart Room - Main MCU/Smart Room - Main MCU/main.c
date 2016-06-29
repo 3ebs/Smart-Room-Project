@@ -47,7 +47,7 @@ enum{lower, upper};
 
 //DATA_1
 unsigned char receive_buffer_uart[5] = {0x00, 0x00, 0x00, 0x00, 0x00};
-unsigned char receive_buffer_i2c[8];
+unsigned char receive_buffer_i2c[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 bool flag1 = 1;
 bool flagOfRequest = 0;
@@ -346,19 +346,19 @@ void motorsFeedBack()
 	bed2Motor.data[upper] = receive_buffer_i2c[5];
 	doorMotor.data[lower] = receive_buffer_i2c[6];
 	doorMotor.data[upper] = receive_buffer_i2c[7];
-	if((windowMotor.pulseCount >= 500 && windowMotor.pulseCount <= 504) || (windowMotor.pulseCount > 0 && windowMotor.pulseCount <= 4))
+	if((windowMotor.pulseCount == 10) || (windowMotor.pulseCount == 0))
 	{
 		WindowData = 0x03;
 	}
-	if((bed1Motor.pulseCount >= 300 && bed1Motor.pulseCount <= 304) || (bed1Motor.pulseCount > 0 && bed1Motor.pulseCount <= 4))
+	if((bed1Motor.pulseCount == 10) || (bed1Motor.pulseCount == 0))
 	{
 		Bed1Data = 0x03;
 	}
-	if((bed2Motor.pulseCount >= 300 && bed2Motor.pulseCount <= 304) || (bed2Motor.pulseCount > 0 && bed2Motor.pulseCount <= 4))
+	if((bed2Motor.pulseCount == 10) || (bed2Motor.pulseCount == 0))
 	{
 		Bed2Data = 0x03;
 	}
-	if((doorMotor.pulseCount >= 350 && doorMotor.pulseCount <= 354) || (doorMotor.pulseCount > 0 && doorMotor.pulseCount <= 4))
+	if((doorMotor.pulseCount == 10) || (doorMotor.pulseCount == 0))
 	{
 		portD.bit4 = 1;
 		portD.bit5 = 1;
