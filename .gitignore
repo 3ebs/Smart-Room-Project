@@ -6,3 +6,14 @@
 *.xml
 *.atsln
 *.atsuo
+*.d
+*.o
+*.mk
+Smart Room - Main MCU/Smart Room - Main MCU/Debug/Makefile
+*.eep
+*.elf
+*.hex
+*.lss
+*.map
+*.srec
+Smart Room - Second MCU/Smart Room - Second MCU/Debug/Makefile
