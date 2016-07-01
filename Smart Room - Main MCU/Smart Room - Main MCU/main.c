@@ -14,7 +14,9 @@
 #include <avr/sleep.h>
 
 #define START				TWCR = (1 << TWINT)|(1 << TWSTA)|(1 << TWEN)|(1 << TWIE)
-#define Prepare_DATA		TWCR = (1 << TWINT)|(1 << TWEN)|(1 << TWIE)
+#define ACK					(TWCR = (1<<TWINT)|(1<<TWEA)|(1<<TWEN)|(1<<TWIE))
+#define PD					TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWIE)
+#define NACK				(TWCR = ((1<<TWINT)|(1<<TWEN)|(1<<TWIE))&(~(1<<TWEA)))
 #define STOP				TWCR = (1 << TWINT)|(1 << TWSTO)|(1 << TWEN)|(1 << TWIE)
 #define Command				receive_buffer_uart[0]
 #define WindowData			receive_buffer_uart[1]
@@ -130,7 +132,7 @@ int main(void)
 			sleep_mode();
 			flagOfSleep = 0;
 		}
-		if(~PIND & 0x40) flagOfRequest = 1;
+		if(PIND6 == 0) flagOfRequest = 1;
 		else flagOfRequest = 0;
 		window_bed1_bed2_motors_AND_light();
 		motorsFeedBack();
@@ -146,19 +148,20 @@ ISR(TWI_vect)
 		case 0x08:
 			if(internal_flagOfADC && !flagOfRequest) 
 			{
-				TWDR = (TWI_adress << 1);
+				TWDR = (TWI_adress << 1)|0x01;
 				i1 = 0;
+				i2 = 0;
 			}
 			else if(flagOfRequest)
 			{
 				TWDR = (TWI_adress << 1) | 0x01;
 				i2 = 0;
 			}
-			Prepare_DATA;
+			PD;
 			break;
 		case 0x18:
 			TWDR = transmit_buffer_i2c[i1++];
-			Prepare_DATA;
+			PD;
 			break;
 		case 0x28:
 			if(i1 == 8)
@@ -166,26 +169,23 @@ ISR(TWI_vect)
 			else
 			{
 				TWDR = transmit_buffer_i2c[i1++];
-				Prepare_DATA;
+				PD;
 			}	
 			break;
 		//receive	
 		case 0x40:
-			Prepare_DATA;
-			TWCR |= (1 << TWEA);
+			ACK;
 			break;
 		case 0x50:
 			if(i2 != 6)
 			{
 				receive_buffer_i2c[i2++] = TWDR;	
-				Prepare_DATA;
-				TWCR |= (1 << TWEA);
+				ACK;
 			}
 			else
 			{
 				receive_buffer_i2c[i2++] = TWDR;
-				Prepare_DATA;
-				TWCR &= ~(1 << TWEA);
+				NACK;
 			}
 			break;
 		case 0x58:
